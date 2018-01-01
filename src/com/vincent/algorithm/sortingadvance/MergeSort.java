@@ -1,61 +1,78 @@
 package com.vincent.algorithm.sortingadvance;
 
+import com.vincent.algorithm.sortingbasic.InsertionSort;
+import com.vincent.algorithm.sortingbasic.SortTestHelper;
+
+import java.util.Arrays;
+
 /**
- * 归并排序0（nlogn）级别的排序算法
- * Created by Vincent on 2018/1/1.
+ * 归并排序
+ * 将arr[l...mid]和arr[mid+1...r]两部分进行归并排序，利用的是复制出来的数组（范围是l,r）
+ * Created by vincent on 2018/1/1.
  */
 public class MergeSort {
-    public static void sort(Comparable[] arr) {
-        int l = 0;
-        int r = arr.length - 1;
-        sort(arr, l, r);
-    }
-
-    private static void sort(Comparable[] arr, int l, int r) {
-        if (l >= r)
-            return;
-
-        int mid = (l + r) / 2;
-        sort(arr, l, mid);
-        sort(arr, mid + 1, r);
-        merge(arr, l, mid, r);
-    }
-
+    // 将arr[l...mid]和arr[mid+1...r]两部分进行归并
     private static void merge(Comparable[] arr, int l, int mid, int r) {
-        //aux为复制出来的数组，用于操作ij比较然后回填到原数组arr中
         Comparable[] aux = new Comparable[r - l + 1];
         System.arraycopy(arr, l, aux, 0, aux.length);
-        //复制出来的数组分左右两部分（已排好序）,然后左右开始移动i,j比较相对索引出的值，哪个小则哪个放进k对应的位置，k++，同时此值所在的i/j进行移动
-        int i = l;
-        int j = mid + 1;
+
+        // 初始化，i指向左半部分的起始索引位置l；j指向右半部分起始索引位置mid+1
+        int i = l, j = mid + 1;
         for (int k = l; k <= r; k++) {
-            if (i > mid) {
-                //[i,mid]区间已经排完
+            // 原数组与复制出来的数组存在偏移量l
+            if (i > mid) {  // 如果左半部分元素已经全部处理完毕
                 arr[k] = aux[j - l];
                 j++;
-            } else if (j > r) {
-                //[mid+1,j]区间已经排完
+            } else if (j > r) {   // 如果右半部分元素已经全部处理完毕
                 arr[k] = aux[i - l];
                 i++;
-            } else if (aux[i - l].compareTo(aux[j - l]) < 0) {
-                //[i,mid]区间的值小
+            } else if (aux[i - l].compareTo(aux[j - l]) < 0) {  // 左半部分所指元素 < 右半部分所指元素
                 arr[k] = aux[i - l];
                 i++;
-            } else {
-                //[mid+1,j]区间的值小
+            } else {  // 左半部分所指元素 >= 右半部分所指元素
                 arr[k] = aux[j - l];
                 j++;
             }
         }
     }
 
-    public static void main(String[] args) {
-        Integer[] arr = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
-        MergeSort.sort(arr);
-        for (Integer integer : arr) {
-            System.out.print(integer + " ");
+    // 递归使用归并排序,对arr[l...r]的范围进行排序，并且针对有序的情况作了一些优化
+    private static void sort(Comparable[] arr, int l, int r) {
+        //优化二，数组长度已经很小时采用插入排序
+        if (r - l < 15) {
+            InsertionSort.sort(arr, l, r);
+            return;
         }
-        System.out.println();
 
+        int mid = (l + r) / 2;
+        sort(arr, l, mid);
+        sort(arr, mid + 1, r);
+        //优化一，如果左边数组的最后一个元素小于右边数组的第一个元素，这表明此时数组已经有序，此时就不需要再进行归并排序
+        if (arr[mid].compareTo(arr[mid + 1]) > 0) {
+            merge(arr, l, mid, r);
+        }
+    }
+
+    public static void sort(Comparable[] arr) {
+
+        int n = arr.length;
+        sort(arr, 0, n - 1);
+    }
+
+    public static void main(String[] args) {
+        // Merge Sort是我们学习的第一个O(nlogn)复杂度的算法
+        // 可以在1秒之内轻松处理100万数量级的数据
+        // 注意：不要轻易尝试使用SelectionSort, InsertionSort或者BubbleSort处理100万级的数据
+        // 否则，你就见识了O(n^2)的算法和O(nlogn)算法的本质差异：）
+        int N = 100000;
+        Integer[] arr = SortTestHelper.generateRandomArray(N, 15, N);
+        Integer[] arr1 = new Integer[arr.length];
+        System.arraycopy(arr, 0, arr1, 0, arr1.length);
+        SortTestHelper.testSort(MergeSort.class, arr);
+        //SortTestHelper.testSort(ShellSort.class, arr1);
+        long start = System.currentTimeMillis();
+        Arrays.sort(arr1);
+        long end = System.currentTimeMillis();
+        System.out.println("Arrays :" + (end - start) + "ms");
     }
 }
