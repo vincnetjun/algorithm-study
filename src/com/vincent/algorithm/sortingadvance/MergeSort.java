@@ -6,12 +6,21 @@ import com.vincent.algorithm.sortingbasic.SortTestHelper;
 import java.util.Arrays;
 
 /**
- * 归并排序
+ * 归并排序，先2分，在排序，自下而上，最终归并完成排序
  * 将arr[l...mid]和arr[mid+1...r]两部分进行归并排序，利用的是复制出来的数组（范围是l,r）
  * Created by vincent on 2018/1/1.
  */
 public class MergeSort {
-    // 将arr[l...mid]和arr[mid+1...r]两部分进行归并
+
+    /**
+     * 将arr[l...mid]和arr[mid+1...r]两部分进行归并
+     * 简单理解为复制出一副一模一样的牌,牌中左右两堆中，左右两堆中都各自保持有序性，归并过程则将左右两堆逐个比较，
+     * 哪个小哪个先放到原来的牌中（自小到大），归并完成则整个副牌[l,r]区间都保证了有序性
+     * @param arr
+     * @param l
+     * @param mid
+     * @param r
+     */
     private static void merge(Comparable[] arr, int l, int mid, int r) {
         Comparable[] aux = new Comparable[r - l + 1];
         System.arraycopy(arr, l, aux, 0, aux.length);
