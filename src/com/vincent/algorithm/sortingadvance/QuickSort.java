@@ -53,7 +53,7 @@ public class QuickSort {
 
     public static void main(String[] args) {
         //此处测试得到快速排序比arrays自带的优化后的归并排序还要快, 但是针对有序的数组排序和优化后的归并排序差距很大，最差的情况退化为O(n^2),
-        // 因为每次都不是均分，有可能出现左子树全是空的
+        // 因为每次都不是均分，有可能出现左子树全是空的，这也是为什么Java底层不采用快速排序的原因
         int N = 1000000;
         Integer[] arr = SortTestHelper.generateNearlyOrderedArray(N, 100);
         Integer[] arr1 = new Integer[arr.length];
