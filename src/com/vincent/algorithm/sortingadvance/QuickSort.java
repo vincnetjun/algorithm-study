@@ -31,7 +31,7 @@ public class QuickSort {
         int j = l;
         //基准值，随机取一位，避免有序的情况退化成O(n^2)，后面所有的元素都和v比较，如果比v大就放在[j+1，i)区间内，如果比v小，则不需要交换，只需要移动j的位置
         int range = new Random().nextInt(r - l + 1) + 1;
-        swap(arr, r, range);
+        swap(arr, l, range);
         Comparable v = arr[l];
         for (int i = l + 1; i <= r; i++) {
             if (v.compareTo(arr[i]) > 0) {
@@ -45,8 +45,8 @@ public class QuickSort {
         return j;
     }
 
-    private static void swap(Comparable[] arr, int j, int i) {
-        Comparable temp = arr[i];
+    private static void swap(Object[] arr, int j, int i) {
+        Object temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
     }
@@ -54,7 +54,7 @@ public class QuickSort {
     public static void main(String[] args) {
         //此处测试得到快速排序比arrays自带的优化后的归并排序还要快, 但是针对有序的数组排序和优化后的归并排序差距很大，最差的情况退化为O(n^2),
         // 因为每次都不是均分，有可能出现左子树全是空的，这也是为什么Java底层不采用快速排序的原因
-        int N = 1000000;
+        int N = 100000;
         Integer[] arr = SortTestHelper.generateNearlyOrderedArray(N, 100);
         Integer[] arr1 = new Integer[arr.length];
         System.arraycopy(arr, 0, arr1, 0, arr1.length);
