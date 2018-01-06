@@ -35,7 +35,7 @@ public class QuickSort {
         Comparable v = arr[l];
         for (int i = l + 1; i <= r; i++) {
             if (v.compareTo(arr[i]) > 0) {
-                //这里先移动j的索引，即当前比基准值v大的值放在j的后面（因为比v大的值放在[j+1, r]区间）
+                //这里先移动j的索引，即当前比基准值v大的值放在j的后面（因为比v大的值放在[j+1, r]区间），这里的遍历值比v小，所以需要和比v大的[j+1,i]区间的第一元素交换，再向后移动j
                 j++;
                 swap(arr, j, i);
             }
