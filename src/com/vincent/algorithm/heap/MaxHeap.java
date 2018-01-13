@@ -42,7 +42,7 @@ public class MaxHeap<Item extends Comparable> {
     }
 
     /**
-     * 当比父节点值大的时候交换
+     * 当比父节点值data[k /2]大的时候交换
      * @param k
      */
     private void shiftUp(int k) {
@@ -57,5 +57,65 @@ public class MaxHeap<Item extends Comparable> {
         Item temp = data[k];
         data[k] = data[i];
         data[i] = temp;
+    }
+
+    /**
+     * 取出顶部的元素
+     * @return
+     */
+    public Item extractMax(){
+        assert count> 0;
+        Item item = data[1];
+        //先将最后一个元素与第一个元素交换
+        swap(1, count);
+        //记得调整数量大小
+        count --;
+        //重新排序以满足最大堆的定义
+        shiftDown(1);
+        return item;
+
+    }
+
+    /**
+     * 向下重新排序，以保证此树满足最大堆的定义
+     * @param k
+     */
+    private void shiftDown(int k) {
+        //若子节点存在的时候，与子节点中的最大值交换
+        while (2*k <= count ){
+            //左子节点的索引位置
+            int j = 2*k;
+            //当右子节点存在，寻找出左右子节点的最大值的索引
+            if (j+1<=count && data[j+1].compareTo(data[j])>0){
+                j++;
+            }
+            //当比左右子节点都要大的时候就推出循环
+            if (data[k].compareTo(data[j]) >= 0){
+                break;
+            }
+            //交换当前节点与子节点中最大值
+            swap(k, j);
+            //重新记录当前的位置
+            k = j;
+        }
+    }
+
+    public static void main(String[] args) {
+        int max = 100;
+        int size = 31;
+        MaxHeap maxHeap = new MaxHeap(size);
+        for (int i = 0; i < size; i++) {
+            maxHeap.insert( new Integer((int)(Math.random() * max)) );
+        }
+        for (int i = 0; i < size; i++) {
+            System.out.print(maxHeap.data[i] + " ");
+        }
+        System.out.println();
+        Integer [] array = new Integer[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = (Integer) maxHeap.extractMax();
+            System.out.print( array[i] + " ");
+        }
+        System.out.println("");
     }
 }
