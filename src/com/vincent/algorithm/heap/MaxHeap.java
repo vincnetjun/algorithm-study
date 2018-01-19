@@ -70,7 +70,7 @@ public class MaxHeap<Item extends Comparable> {
      */
     private void shiftUp(int k) {
         //k必须大于1,位于顶部的时候已经不需要shiftUp操作了
-        if (k > 1 && data[k / 2].compareTo(data[k]) < 0) {
+        while (k > 1 && data[k / 2].compareTo(data[k]) < 0) {
             swap(k, k / 2);
             k /= 2;
         }
